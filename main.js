@@ -165,4 +165,17 @@ function updateAudio(speed, isBraking) {
         // ... rest of your stop logic
     }
 }
-    
+// Custom Station Icon
+const stationIcon = L.divIcon({
+    className: 'custom-station',
+    html: '<div class="station-dot"></div>',
+    iconSize: [20, 20]
+});
+
+// Add markers to every 'isStop' waypoint
+waypoints.forEach(point => {
+    if (point.isStop) {
+        L.marker(point.pos, { icon: stationIcon }).addTo(map);
+    }
+});
+
