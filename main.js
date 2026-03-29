@@ -77,3 +77,22 @@ document.getElementById('color-input').addEventListener('input', (e) => {
 
 // Start the simulation
 move();
+// Setup Audio
+const engineSound = new Audio('assets/subway-engine.mp3');
+engineSound.loop = true;
+
+const brakeSound = new Audio('assets/brake-squeal.mp3');
+
+function updateAudio(speed, isBraking) {
+    if (speed > 0) {
+        if (engineSound.paused) engineSound.play();
+        // Pitch goes up as speed increases
+        engineSound.playbackRate = 0.5 + (speed * 0.5); 
+        engineSound.volume = 0.3 + (speed * 0.7);
+    }
+    
+    if (isBraking && speed < 0.3) {
+        brakeSound.play();
+    }
+}
+    
