@@ -3,38 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Transport Sim</title>
+    <title>HyperOS Subway Sim</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="ui-panel">
-        <h2 id="txt-title">Transport Map</h2>
+        <h2 id="txt-title">Subway System</h2>
         
-        <label id="lbl-lang">Language:</label>
         <select id="lang-select" onchange="updateLanguage()">
             <option value="en">English</option>
             <option value="fr">Français</option>
             <option value="de">Deutsch</option>
-            <option value="es">Español</option>
-            <option value="it">Italiano</option>
-            <option value="pt">Português</option>
-            <option value="nl">Nederlands</option>
             <option value="zh">中文</option>
-            <option value="ro">Română</option>
             <option value="ru">Русский</option>
-            <option value="jp">日本語</option>
-            <option value="ko">한국어</option>
-        </select>
+            </select>
 
-        <label id="lbl-line">Line Number:</label>
-        <input type="text" id="line-input" value="101">
+        <div id="controls">
+            <label id="lbl-line">Line</label>
+            <input type="text" id="line-input" value="M1 Blue">
+            <input type="color" id="color-input" value="#0078ff">
+        </div>
 
-        <label id="lbl-color">Line Color:</label>
-        <input type="color" id="color-input" value="#ff0000">
+        <button id="btn-start" onclick="initSystem()">🚀 START TRIP</button>
 
         <div id="status-box">
-            <span id="lbl-status">Status</span>: <span id="status-val">Moving</span>
+            <span id="status-val">System Ready</span>
         </div>
     </div>
 
