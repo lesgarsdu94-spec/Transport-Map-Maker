@@ -95,8 +95,7 @@ function updateAudio(speed, isBraking) {
         brakeSound.play();
     }
 }
-    function animate() 
-{
+    function animate() {
     step++;
     let progress = step / duration;
 
