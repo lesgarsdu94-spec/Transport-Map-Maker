@@ -1,39 +1,82 @@
-// 1. Setup Map
-const map = L.map('map', { zoomControl: false }).setView([44.4268, 26.1025], 15);
+// 1. Audio Setup
+const engineSound = new Audio('assets/subway-engine.mp3');
+const brakeSound = new Audio('assets/brake-squeal.mp3');
+engineSound.loop = true;
+
+// 2. Map Setup (Dark Tiles)
+const map = L.map('map', { zoomControl: false }).setView([44.43, 26.10], 16);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-// 2. Route Waypoints (Coords: [Lat, Lng])
-const waypoints = [
-    { pos: [44.4268, 26.1025], isStop: false },
-    { pos: [44.4285, 26.1050], isStop: true }, // The STOP
-    { pos: [44.4310, 26.1080], isStop: false }
+// 3. Waypoints (The Route)
+const route = [
+    { pos: [44.432, 26.101], isStop: false },
+    { pos: [44.435, 26.105], isStop: true }, // STATION
+    { pos: [44.438, 26.109], isStop: false }
 ];
 
 let currentIndex = 0;
-let currentLang = 'en';
+const train = L.circleMarker(route[0].pos, { radius: 12, color: '#fff', fillOpacity: 1 }).addTo(map);
+const line = L.polyline(route.map(r => r.pos), { color: '#0078ff', weight: 6 }).addTo(map);
 
-// 3. Create Visuals
-const polyline = L.polyline(waypoints.map(w => w.pos), { color: '#ff0000', weight: 5 }).addTo(map);
-const vehicle = L.circleMarker(waypoints[0].pos, { radius: 10, color: '#fff', fillOpacity: 1 }).addTo(map);
+function initSystem() {
+    engineSound.play();
+    document.getElementById('btn-start').style.display = 'none';
+    moveTrain();
+}
 
-// 4. Movement Logic with "Smooth Brake"
-function move() {
-    let start = waypoints[currentIndex].pos;
-    let nextIndex = (currentIndex + 1) % waypoints.length;
-    let end = waypoints[nextIndex].pos;
-    let isNextAStop = waypoints[nextIndex].isStop;
+function moveTrain() {
+    let start = route[currentIndex].pos;
+    let nextIdx = (currentIndex + 1) % route.length;
+    let end = route[nextIdx].pos;
+    let isNextAStop = route[nextIdx].isStop;
 
     let step = 0;
-    const duration = 100; // Total frames
+    const duration = 150; // Total frames for movement
 
-    function animate() {
+    function frame() {
         step++;
         let progress = step / duration;
 
-        // --- BRAKE LOGIC ---
-        // If the next point is a stop, we slow down (Ease-Out)
+        // --- SMOOTH BRAKE (Quadratic Easing) ---
+        // If next point is a stop, slow down at the end.
         let t = isNextAStop ? (1 - Math.pow(1 - progress, 2)) : progress;
 
+        let lat = start[0] + (end[0] - start[0]) * t;
+        let lng = start[1] + (end[1] - start[1]) * t;
+        const currentPos = [lat, lng];
+        
+        train.setLatLng(currentPos);
+        
+        // --- 3D TRIP VIEW (Camera Lock) ---
+        map.setView(currentPos, 18, { animate: false });
+
+        // --- SOUND ENGINE ---
+        // Pitch drops as we slow down for a stop
+        let speed = isNextAStop ? (1 - progress) : 1;
+        engineSound.playbackRate = 0.6 + (speed * 0.4);
+        
+        // Squeal brakes right before stopping
+        if (isNextAStop && progress > 0.85 && progress < 0.9) {
+            brakeSound.play();
+        }
+
+        if (step < duration) {
+            requestAnimationFrame(frame);
+        } else {
+            currentIndex = nextIdx;
+            if (isNextAStop) {
+                document.getElementById('status-val').innerText = translations[currentLang].stopped;
+                setTimeout(() => {
+                    document.getElementById('status-val').innerText = translations[currentLang].moving;
+                    moveTrain();
+                }, 10000); // 10 Second Wait
+            } else {
+                moveTrain();
+            }
+        }
+    }
+    frame();
+}
         let lat = start[0] + (end[0] - start[0]) * t;
         let lng = start[1] + (end[1] - start[1]) * t;
         vehicle.setLatLng([lat, lng]);
