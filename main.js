@@ -95,4 +95,32 @@ function updateAudio(speed, isBraking) {
         brakeSound.play();
     }
 }
+    function animate() 
+{
+    step++;
+    let progress = step / duration;
+
+    // Smooth Brake (Ease-Out)
+    let t = isNextAStop ? (1 - Math.pow(1 - progress, 2)) : progress;
+
+    let lat = start[0] + (end[0] - start[0]) * t;
+    let lng = start[1] + (end[1] - start[1]) * t;
+    
+    const currentPos = [lat, lng];
+    vehicle.setLatLng(currentPos);
+    
+    // --- 3D TRIP VIEW ---
+    // Keep the camera locked on the train and zoom in close
+    map.setView(currentPos, 18, { animate: false }); 
+
+    // Update Audio based on progress
+    let speedFactor = isNextAStop ? (1 - progress) : 1;
+    updateAudio(speedFactor, isNextAStop && progress > 0.8);
+
+    if (step < duration) {
+        requestAnimationFrame(animate);
+    } else {
+        // ... rest of your stop logic
+    }
+}
     
