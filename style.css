@@ -20,3 +20,13 @@ body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hi
     margin-top: 15px; text-align: center;
     font-size: 0.9em; color: #00ff88; text-transform: uppercase;
 }
+#map-container {
+    perspective: 1000px; /* This enables 3D math */
+    width: 100vw; height: 100vh;
+}
+
+/* When this class is added, the map tilts! */
+.view-3d #map {
+    transform: rotateX(45deg) scale(1.2);
+    transition: transform 1.5s ease-in-out;
+}
