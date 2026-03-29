@@ -1,23 +1,22 @@
-body, html { margin: 0; padding: 0; height: 100%; background: #000; }
-#map { height: 100vh; width: 100vw; z-index: 1; }
+body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+#map { height: 100vh; width: 100vw; background: #0a0a0a; }
 
 #ui-panel {
-    position: absolute; top: 15px; left: 15px; z-index: 1000;
-    width: 220px; padding: 20px;
-    background: rgba(25, 25, 25, 0.85);
-    backdrop-filter: blur(15px); /* Xiaomi style blur */
-    border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
-    color: white; font-family: 'Segoe UI', sans-serif;
+    position: absolute; top: 20px; left: 20px; z-index: 1000;
+    width: 260px; padding: 20px;
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
+    color: white; font-family: sans-serif;
 }
 
-label { display: block; font-size: 12px; margin-top: 10px; color: #aaa; }
-input, select { 
-    width: 100%; background: #333; border: none; padding: 8px; 
-    border-radius: 5px; color: white; margin-top: 5px;
+#btn-start {
+    width: 100%; padding: 15px; margin-top: 20px;
+    background: #0078ff; color: white; border: none;
+    border-radius: 15px; font-weight: bold; cursor: pointer;
 }
 
 #status-box {
-    margin-top: 15px; padding: 10px;
-    background: rgba(0,0,0,0.3); border-radius: 8px;
-    font-weight: bold; text-align: center;
+    margin-top: 15px; text-align: center;
+    font-size: 0.9em; color: #00ff88; text-transform: uppercase;
 }
