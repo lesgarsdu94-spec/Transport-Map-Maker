@@ -178,4 +178,16 @@ waypoints.forEach(point => {
         L.marker(point.pos, { icon: stationIcon }).addTo(map);
     }
 });
+const windSound = new Audio('assets/wind-whoosh.mp3');
+windSound.loop = true;
+windSound.volume = 0;
+
+function updateAudio(speed) {
+    // Engine pitch goes up
+    engineSound.playbackRate = 0.5 + (speed * 0.5);
+    
+    // Wind volume goes up as you go faster
+    windSound.volume = speed * 0.4;
+    if (windSound.paused) windSound.play();
+}
 
